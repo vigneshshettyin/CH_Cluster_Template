@@ -10,25 +10,8 @@
 - across clickhouse-05 and clickhouse-07 for shard 03
 - across clickhouse-06 and clickhouse-08 for shard 04
 
--- Ch Nodes
-
-1 2
-3 4
-
----
-
-5 6
-7 8
-
--- Shards & Replica
-
-01 02 01 02
-01 01 02 02
-
----
-
-03 04 03 04
-03 03 04 04
+### Config
+  ![image](https://github.com/vigneshshettyin/CH_Cluster_Template/assets/77713888/912bd066-98cd-4d3c-a437-81f596766c95)
 
 By default the version of ClickHouse used will be `latest`, and ClickHouse Keeper
 will be `latest-alpine`. You can specify specific versions by setting environment
