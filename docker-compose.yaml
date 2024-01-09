@@ -1,149 +1,164 @@
-version: '3.8'
+version: "3.8"
+
+x-base-service: &base-service
+  image: clickhouse/clickhouse-server:${CLICKHOUSE_VERSION:-latest}
+  user: "101:101"
+  restart: always
+  ulimits:
+    nofile:
+      soft: 262144
+      hard: 262144
+  healthcheck:
+    test: ["CMD", "clickhouse-client", "-q", "SELECT 1"]
+    interval: 30s
+    timeout: 5s
+    retries: 3
+  depends_on:
+    - clickhouse-keeper-01
+    - clickhouse-keeper-02
+    - clickhouse-keeper-03
+
 services:
   clickhouse-01:
-    image: "clickhouse/clickhouse-server:${CHVER:-latest}"
-    user: "101:101"
+    <<: *base-service
     container_name: clickhouse-01
     hostname: clickhouse-01
     volumes:
+      - ch_node1:/var/lib/clickhouse/
       - ${PWD}/fs/volumes/clickhouse-01/etc/clickhouse-server/config.d/config.xml:/etc/clickhouse-server/config.d/config.xml
       - ${PWD}/fs/volumes/clickhouse-01/etc/clickhouse-server/users.d/users.xml:/etc/clickhouse-server/users.d/users.xml
     ports:
       - "127.0.0.1:8123:8123"
       - "127.0.0.1:9000:9000"
-    depends_on:
-      - clickhouse-keeper-01
-      - clickhouse-keeper-02
-      - clickhouse-keeper-03
+
   clickhouse-02:
-    image: "clickhouse/clickhouse-server:${CHVER:-latest}"
-    user: "101:101"
+    <<: *base-service
     container_name: clickhouse-02
     hostname: clickhouse-02
     volumes:
+      - ch_node2:/var/lib/clickhouse/
       - ${PWD}/fs/volumes/clickhouse-02/etc/clickhouse-server/config.d/config.xml:/etc/clickhouse-server/config.d/config.xml
       - ${PWD}/fs/volumes/clickhouse-02/etc/clickhouse-server/users.d/users.xml:/etc/clickhouse-server/users.d/users.xml
     ports:
       - "127.0.0.1:8124:8123"
       - "127.0.0.1:9001:9000"
-    depends_on:
-      - clickhouse-keeper-01
-      - clickhouse-keeper-02
-      - clickhouse-keeper-03
+
   clickhouse-03:
-    image: "clickhouse/clickhouse-server:${CHVER:-latest}"
-    user: "101:101"
+    <<: *base-service
     container_name: clickhouse-03
     hostname: clickhouse-03
     volumes:
+      - ch_node3:/var/lib/clickhouse/
       - ${PWD}/fs/volumes/clickhouse-03/etc/clickhouse-server/config.d/config.xml:/etc/clickhouse-server/config.d/config.xml
       - ${PWD}/fs/volumes/clickhouse-03/etc/clickhouse-server/users.d/users.xml:/etc/clickhouse-server/users.d/users.xml
     ports:
       - "127.0.0.1:8125:8123"
       - "127.0.0.1:9002:9000"
-    depends_on:
-      - clickhouse-keeper-01
-      - clickhouse-keeper-02
-      - clickhouse-keeper-03
+
   clickhouse-04:
-    image: "clickhouse/clickhouse-server:${CHVER:-latest}"
-    user: "101:101"
+    <<: *base-service
     container_name: clickhouse-04
     hostname: clickhouse-04
     volumes:
+      - ch_node4:/var/lib/clickhouse/
       - ${PWD}/fs/volumes/clickhouse-04/etc/clickhouse-server/config.d/config.xml:/etc/clickhouse-server/config.d/config.xml
       - ${PWD}/fs/volumes/clickhouse-04/etc/clickhouse-server/users.d/users.xml:/etc/clickhouse-server/users.d/users.xml
     ports:
-        - "127.0.0.1:8126:8123"
-        - "127.0.0.1:9003:9000"
-    depends_on:
-      - clickhouse-keeper-01
-      - clickhouse-keeper-02
-      - clickhouse-keeper-03
+      - "127.0.0.1:8126:8123"
+      - "127.0.0.1:9003:9000"
+
   clickhouse-05:
-    image: "clickhouse/clickhouse-server:${CHVER:-latest}"
-    user: "101:101"
+    <<: *base-service
     container_name: clickhouse-05
     hostname: clickhouse-05
     volumes:
+      - ch_node5:/var/lib/clickhouse/
       - ${PWD}/fs/volumes/clickhouse-05/etc/clickhouse-server/config.d/config.xml:/etc/clickhouse-server/config.d/config.xml
       - ${PWD}/fs/volumes/clickhouse-05/etc/clickhouse-server/users.d/users.xml:/etc/clickhouse-server/users.d/users.xml
     ports:
-        - "127.0.0.1:8127:8123"
-        - "127.0.0.1:9004:9000"
-    depends_on:
-      - clickhouse-keeper-01
-      - clickhouse-keeper-02
-      - clickhouse-keeper-03
+      - "127.0.0.1:8127:8123"
+      - "127.0.0.1:9004:9000"
+
   clickhouse-06:
-    image: "clickhouse/clickhouse-server:${CHVER:-latest}"
-    user: "101:101"
+    <<: *base-service
     container_name: clickhouse-06
     hostname: clickhouse-06
     volumes:
+      - ch_node6:/var/lib/clickhouse/
       - ${PWD}/fs/volumes/clickhouse-06/etc/clickhouse-server/config.d/config.xml:/etc/clickhouse-server/config.d/config.xml
       - ${PWD}/fs/volumes/clickhouse-06/etc/clickhouse-server/users.d/users.xml:/etc/clickhouse-server/users.d/users.xml
     ports:
-        - "127.0.0.1:8128:8123"
-        - "127.0.0.1:9005:9000"
-    depends_on:
-      - clickhouse-keeper-01
-      - clickhouse-keeper-02
-      - clickhouse-keeper-03
+      - "127.0.0.1:8128:8123"
+      - "127.0.0.1:9005:9000"
+
   clickhouse-07:
-    image: "clickhouse/clickhouse-server:${CHVER:-latest}"
-    user: "101:101"
+    <<: *base-service
     container_name: clickhouse-07
     hostname: clickhouse-07
     volumes:
+      - ch_node7:/var/lib/clickhouse/
       - ${PWD}/fs/volumes/clickhouse-07/etc/clickhouse-server/config.d/config.xml:/etc/clickhouse-server/config.d/config.xml
       - ${PWD}/fs/volumes/clickhouse-07/etc/clickhouse-server/users.d/users.xml:/etc/clickhouse-server/users.d/users.xml
     ports:
-        - "127.0.0.1:8129:8123"
-        - "127.0.0.1:9006:9000"
-    depends_on:
-      - clickhouse-keeper-01
-      - clickhouse-keeper-02
-      - clickhouse-keeper-03
+      - "127.0.0.1:8129:8123"
+      - "127.0.0.1:9006:9000"
+
   clickhouse-08:
-    image: "clickhouse/clickhouse-server:${CHVER:-latest}"
-    user: "101:101"
+    <<: *base-service
     container_name: clickhouse-08
     hostname: clickhouse-08
     volumes:
+      - ch_node8:/var/lib/clickhouse/
       - ${PWD}/fs/volumes/clickhouse-08/etc/clickhouse-server/config.d/config.xml:/etc/clickhouse-server/config.d/config.xml
       - ${PWD}/fs/volumes/clickhouse-08/etc/clickhouse-server/users.d/users.xml:/etc/clickhouse-server/users.d/users.xml
     ports:
-        - "127.0.0.1:8130:8123"
-        - "127.0.0.1:9007:9000"
-    depends_on:
-      - clickhouse-keeper-01
-      - clickhouse-keeper-02
-      - clickhouse-keeper-03
+      - "127.0.0.1:8130:8123"
+      - "127.0.0.1:9007:9000"
+
   clickhouse-keeper-01:
     image: "clickhouse/clickhouse-keeper:${CHKVER:-latest-alpine}"
     user: "101:101"
     container_name: clickhouse-keeper-01
     hostname: clickhouse-keeper-01
     volumes:
-     - ${PWD}/fs/volumes/clickhouse-keeper-01/etc/clickhouse-keeper/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml
+      - ${PWD}/fs/volumes/clickhouse-keeper-01/etc/clickhouse-keeper/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml
     ports:
-        - "127.0.0.1:9181:9181"
+      - "127.0.0.1:9181:9181"
+
   clickhouse-keeper-02:
     image: "clickhouse/clickhouse-keeper:${CHKVER:-latest-alpine}"
     user: "101:101"
     container_name: clickhouse-keeper-02
     hostname: clickhouse-keeper-02
     volumes:
-     - ${PWD}/fs/volumes/clickhouse-keeper-02/etc/clickhouse-keeper/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml
+      - ${PWD}/fs/volumes/clickhouse-keeper-02/etc/clickhouse-keeper/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml
     ports:
-        - "127.0.0.1:9182:9181"
+      - "127.0.0.1:9182:9181"
+
   clickhouse-keeper-03:
     image: "clickhouse/clickhouse-keeper:${CHKVER:-latest-alpine}"
     user: "101:101"
     container_name: clickhouse-keeper-03
     hostname: clickhouse-keeper-03
     volumes:
-     - ${PWD}/fs/volumes/clickhouse-keeper-03/etc/clickhouse-keeper/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml
+      - ${PWD}/fs/volumes/clickhouse-keeper-03/etc/clickhouse-keeper/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml
     ports:
-        - "127.0.0.1:9183:9181"
+      - "127.0.0.1:9183:9181"
+
+volumes:
+  ch_node1:
+    name: clickhouse-node1
+  ch_node2:
+    name: clickhouse-node2
+  ch_node3:
+    name: clickhouse-node3
+  ch_node4:
+    name: clickhouse-node4
+  ch_node5:
+    name: clickhouse-node5
+  ch_node6:
+    name: clickhouse-node6
+  ch_node7:
+    name: clickhouse-node7
+  ch_node8:
+    name: clickhouse-node8
